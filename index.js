@@ -20,9 +20,10 @@ async function run(){
         const serviceCollection=client.db('Tour-service').collection('services')
         
         app.get('/services',async(req,res)=>{
+            const size=parseInt(req.query.size); 
             const query={}
             const cursor=serviceCollection.find(query)
-            const services=await cursor.toArray();
+            const services=await cursor.limit(size).toArray();
             res.send(services)
             console.log(services);
         });
