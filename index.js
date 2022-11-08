@@ -68,6 +68,12 @@ async function run(){
     
         });
 
+        app.post('/services',async(req,res)=>{
+            const service=req.body 
+            const result=await serviceCollection.insertOne(service)
+            res.send(result)
+        })
+
         app.put('/reviews/:id',async(req,res)=>{
             const id=req.params.id
             const filter={_id:ObjectId(id)}
