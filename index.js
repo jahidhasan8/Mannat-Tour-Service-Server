@@ -1,5 +1,5 @@
 const express=require('express')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors=require('cors')
 require('dotenv').config()
 const port=process.env.PORT || 5000
@@ -18,14 +18,29 @@ async function run(){
     try{
         
         const serviceCollection=client.db('Tour-service').collection('services')
-        
+        const reviewCollection=client.db('Tour-service').collection('reviews');
+
         app.get('/services',async(req,res)=>{
             const size=parseInt(req.query.size); 
             const query={}
             const cursor=serviceCollection.find(query)
             const services=await cursor.limit(size).toArray();
             res.send(services)
-            console.log(services);
+            // console.log(services);
+        });
+
+        app.get('/services/:id',async(req,res)=>{
+            const id=req.params.id
+            const query={_id:ObjectId(id)}
+            const service=await serviceCollection.findOne(query)
+            res.send(service)
+         });
+
+         app.post('/reviews',async(req,res)=>{
+            const review=req.body 
+            const result=await reviewCollection.insertOne(review);
+            res.send(result)
+    
         });
     }
     finally{
