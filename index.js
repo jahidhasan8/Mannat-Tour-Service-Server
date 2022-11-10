@@ -89,7 +89,8 @@ async function run() {
                 }
             }
             const cursor=reviewCollection.find(query);
-            const reviews=await cursor.toArray()
+            const data=await cursor.toArray()
+            const reviews=data.reverse()
             res.send(reviews)
         })
 
