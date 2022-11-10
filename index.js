@@ -49,7 +49,7 @@ async function run() {
             const cursor = serviceCollection.find(query)
             const services = await cursor.limit(size).toArray();
             res.send(services)
-            // console.log(services);
+            
         });
 
         app.get('/services/:id', async (req, res) => {
@@ -77,35 +77,23 @@ async function run() {
             res.send(reviews)
         })
 
-        app.get('/reviews',verifyJWT, async (req, res) => {
-           
-            let query = {}
-            if (req.query.email) {
-                query = {
-                    email: req.query.email
-                }
-            }
-             
-            const cursor = reviewCollection.find(query)
-            const reviews = await cursor.toArray()
-            res.send(reviews)
-        })
          
-        app.get('/serviceReview',async(req,res)=>{
+        // all review under a service ..api
+         app.get('/serviceReview',async(req,res)=>{
            
             let query={} 
-
+            
              if (req.query.serviceId) {
                 query = {
                     serviceId: req.query.serviceId
                 }
             }
-            const cursor= reviewCollection.find(query)
+            const cursor=reviewCollection.find(query);
             const reviews=await cursor.toArray()
             res.send(reviews)
         })
 
-
+       
         app.get('/reviews/:id', async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
@@ -125,8 +113,9 @@ async function run() {
             const result = await serviceCollection.insertOne(service)
             res.send(result)
         })
-
-        app.put('/reviews/:id',verifyJWT, async (req, res) => {
+         
+        // update api
+        app.put('/reviews/:id',verifyJWT, async(req, res) => {
             const id = req.params.id
             const filter = { _id: ObjectId(id) }
             const review = req.body
@@ -142,7 +131,8 @@ async function run() {
             const result = await reviewCollection.updateOne(filter, updatedReview, option);
             res.send(result);
         })
-
+        
+        // delete api
         app.delete('/reviews/:id',verifyJWT, async (req, res) => {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
